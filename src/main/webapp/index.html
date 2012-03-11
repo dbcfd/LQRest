@@ -8,32 +8,32 @@
 <body>
 <div id="output">Output of results</div>
 <hr/>
-<a href="#" id="addUser">Add User</a>
-<a href="#" id="getUser">Get User</a>
+<a href="#"><div id="addUser">Add User</div></a>
+<a href="#"><div id="getUser">Get User</div></a>
 
 <script type="text/javascript">
     $(document).ready(function(){
-        $('#addUser').onClick(function(event) {
+        $('#addUser').click(function(event) {
             alert("sending ajax post");
             $.ajax({
                 url : "/api/users/testid",
                 dataType : "json",
                 type : "POST",
                 success : function(result) {
-                    alert("data=" + result);
-                    $('#output').setHtml("Sucessfully added user");
+                    alert("data=" + JSON.stringify(result));
+                    $('#output').html("Sucessfully added user");
                 }
             });
         } );
-        $('#addUser').onClick(function(event) {
+        $('#getUser').click(function(event) {
             alert("sending ajax get");
             $.ajax({
                 url : "/api/users/testid",
                 dataType : "json",
                 type : "GET",
                 success : function(result) {
-                    alert("data=" + result);
-                    $('#output').setHtml("get user");
+                    alert("data=" + JSON.stringify(result));
+                    $('#output').html("get user");
                 }
             });
          });

@@ -1,31 +1,47 @@
 package com.webwino.models
 
-import com.webwino.mongo.Mongo
-
 import org.bson.types.ObjectId
 import com.mongodb.casbah.commons.MongoDBObject
+import com.mongodb.casbah.Imports._
 
-class User(val foursquareId:String) {
+import com.webwino.mongo.Mongo
+import cc.spray.json._
 
+class User(val dbObject:MongoDBObject) {
+  def this(fqId:String) = this(MongoDBObject("foursquareId" -> fqId))
+  def foursquareId:String = dbObject.as[String]("foursquareId")
+
+  def toJson = JsObject("foursquareId" -> JsString(foursquareId))
 }
 
 object User {
   val collection = Mongo.userCollection
   
-  def fromDb(foursquareId:String):Option[User] = {
+  def fromDb(foursquareId:String):Option[MongoDBObject] = {
     val dbUser = MongoDBObject("foursquareId" -> foursquareId)
     val found = collection.findOne(dbUser)
     found match {
-      case Some(user:MongoDBObject) => ( {
-        return Some(new User(user.as[String]("foursquareId")))
-      })
-      case _ => return None
+      case Some(_) => Some(dbUser)
+      case _ => None
     }
   }
 
-  def toDb(user:User) = {
-    val dbUser = MongoDBObject("foursquareId" -> user.foursquareId)
-    collection.save(dbUser)
+  def fromJson(v:JsValue) = v.asJsObject.getFields("foursquareId") match {
+    case Seq(JsString(foursquareId)) => ( {
+      val dbObj = MongoDBObject("foursquareId" -> foursquareId)
+      new User(dbObj)
+    } )
+    case _ => deserializationError("Incorrect format:" + v.toString())
   }
 
+  def toDb(user:MongoDBObject) = {
+    collection.save(user)
+  }
+  
+  def delete(user:MongoDBObject) = {
+    collection.remove(user)
+  }
+  
+  implicit def dbToUser(dbObj:MongoDBObject):User = new User(dbObj)
+  implicit def userToDb(user:User):MongoDBObject = user.dbObject
 }
