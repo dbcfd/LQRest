@@ -7,7 +7,7 @@ import Keys._
 object Build extends sbt.Build {
   import Dependencies._
 
-  lazy val myProject = Project("spray-template", file("."))
+  lazy val myProject = Project("LQRest", file("."))
     .settings(WebPlugin.webSettings: _*)
     .settings(port in config("container") := 8080)
     .settings(
@@ -19,6 +19,10 @@ object Build extends sbt.Build {
       libraryDependencies ++= Seq(
         Compile.akkaActor,
         Compile.sprayServer,
+        Compile.jodaTime,
+        Compile.jodaConvert,
+        Compile.casbah,
+        Compile.sprayJson,
         Test.specs2,
         Container.jettyWebApp,
         Container.akkaSlf4j,
@@ -42,11 +46,19 @@ object Dependencies {
     val jetty   = "8.1.0.v20120127"
     val slf4j   = "1.6.4"
     val logback = "1.0.0"
+    val jodaTime = "2.0"
+    val jodaConvert = "1.2"
+    val casbah = "2.1.5-1"
+    val sprayJson = "1.1.0"
   }
 
   object Compile {
-    val akkaActor   = "se.scalablesolutions.akka" %  "akka-actor"      % V.akka    % "compile"
-    val sprayServer = "cc.spray"                  %  "spray-server"    % V.spray   % "compile"
+    val akkaActor   = "se.scalablesolutions.akka" %  "akka-actor"      % V.akka        % "compile"
+    val sprayServer = "cc.spray"                  %  "spray-server"    % V.spray       % "compile"
+    val jodaTime    = "joda-time"                 %  "joda-time"       % V.jodaTime    % "compile"
+    val jodaConvert = "org.joda"                  %  "joda-convert"    % V.jodaConvert % "compile"
+    val casbah      = "com.mongodb.casbah"        %  "casbah_2.9.1"    % V.casbah      % "compile"
+    val sprayJson   = "cc.spray"                  %%  "spray-json"     % V.sprayJson   % "compile"
   }
 
   object Test {

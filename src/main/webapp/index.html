@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+</head>
+<script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+<body>
+<div id="output">Output of results</div>
+<hr/>
+<a href="#" id="addUser">Add User</a>
+<a href="#" id="getUser">Get User</a>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#addUser').onClick(function(event) {
+            alert("sending ajax post");
+            $.ajax({
+                url : "/api/users/testid",
+                dataType : "json",
+                type : "POST",
+                success : function(result) {
+                    alert("data=" + result);
+                    $('#output').setHtml("Sucessfully added user");
+                }
+            });
+        } );
+        $('#addUser').onClick(function(event) {
+            alert("sending ajax get");
+            $.ajax({
+                url : "/api/users/testid",
+                dataType : "json",
+                type : "GET",
+                success : function(result) {
+                    alert("data=" + result);
+                    $('#output').setHtml("get user");
+                }
+            });
+         });
+    });
+</script >
+</body>
+</html>

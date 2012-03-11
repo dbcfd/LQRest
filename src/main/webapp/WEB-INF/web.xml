@@ -19,7 +19,12 @@
 
     <servlet-mapping>
         <servlet-name>SprayConnectorServlet</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SprayConnectorServlet</servlet-name>
+        <url-pattern>/test/*</url-pattern>
     </servlet-mapping>
 
 </web-app>
