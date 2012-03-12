@@ -10,19 +10,22 @@ import cc.spray.json._
 class User(val dbObject:MongoDBObject) {
   def this(fqId:String) = this(MongoDBObject("foursquareId" -> fqId))
   def foursquareId:String = dbObject.as[String]("foursquareId")
+  def id:ObjectId = dbObject.as[ObjectId]("_id")
 
-  def toJson = JsObject("foursquareId" -> JsString(foursquareId))
+  def toJson = JsObject("_id" -> JsString(id.toString()), "foursquareId" -> JsString(foursquareId))
 }
 
 object User {
   val collection = Mongo.userCollection
   
-  def fromDb(foursquareId:String):Option[MongoDBObject] = {
+  def fromDb(foursquareId:String):Option[User] = {
     val dbUser = MongoDBObject("foursquareId" -> foursquareId)
     val found = collection.findOne(dbUser)
     found match {
-      case Some(_) => Some(dbUser)
-      case _ => None
+      case Some(obj:DBObject) => ({
+        Some(new User(obj))
+      } )
+      case None => None
     }
   }
 

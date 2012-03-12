@@ -7,10 +7,11 @@ import http._
 import HttpMethods._
 import StatusCodes._
 import cc.spray.json._
+import cc.spray.typeconversion._
+import org.specs2.specification.{Given, When,  Then}
+import org.specs2.execute.Result
 
-class RestServiceSpec extends Specification with SprayTest with Rest {
-  def jsMatcher:Matcher[Either[DeserializationError,String]]
-  
+class RestServiceSpec extends Specification with SprayTest with Rest with SprayJsonSupport {
   "The RestService" should {
     "return a greeting for GET requests to the test path" in {
       testService(HttpRequest(GET, "/test")) {
@@ -20,27 +21,30 @@ class RestServiceSpec extends Specification with SprayTest with Rest {
     "return a success response for GET requests to the api/users/testid path" in {
       testService(HttpRequest(GET, "/api/users/testid")) {
         restService
-      }.response.content.as[String] must /("resultCode" -> resultCodes.success.value)
+      }.response.content.as[String] must beRight like ( () => ({
+          _.right
+          true
+        } ))
     }
     "return a id not found response for GET requests to the api/users/badid path" in {
       testService(HttpRequest(GET, "/api/users/badid")) {
         restService
-      }.response.content.as[String] mustEqual mustEqual Right(Rest.resultCodes.idNotFound)
+      }.response.content.as[String] mustEqual Right(*/("resultCode" -> resultCodes.idNotFound))
     }
     "return a duplicate id response for PUT requests to the api/users/testid path" in {
       testService(HttpRequest(PUT, "/api/users/testid")) {
         restService
-      }.response.content.as[String] mustEqual mustEqual Right(Rest.resultCodes.duplicateId)
+      }.response.content.as[String] mustEqual Right(*/("resultCode" -> resultCodes.duplicateId))
     }
     "return a success response for PUT requests to the api/users/dummyid path" in {
       testService(HttpRequest(PUT, "/api/users/dummyid")) {
         restService
-      }.response.content.as[String] mustEqual mustEqual Right(Rest.resultCodes.success)
+      }.response.content.as[String] mustEqual Right(*/("resultCode" -> resultCodes.success))
     }
     "return a success response for DELETE requests to the api/users/dummyid path" in {
       testService(HttpRequest(DELETE, "/api/users/dummyid")) {
         restService
-      }.response.content.as[JsObject]("resultCode") mustEqual Right(Rest.resultCodes.success)
+      }.response.content.as[String] mustEqual Right(*/("resultCode" -> resultCodes.success))
     }
     "leave GET requests to other paths unhandled" in {
       testService(HttpRequest(GET, "/kermit")) {

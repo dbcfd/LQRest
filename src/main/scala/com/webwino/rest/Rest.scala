@@ -8,10 +8,10 @@ import com.webwino.models.User
 
 trait Rest extends Directives {
   object resultCodes {
-    val success = JsString("200")
-    val failure = JsString("400")
-    val idNotFound = JsString("401")
-    val duplicateId = JsString("402")
+    val success = JsNumber(200)
+    val failure = JsNumber(400)
+    val idNotFound = JsNumber(401)
+    val duplicateId = JsNumber(402)
   }
   
   val restService = {
@@ -26,19 +26,27 @@ trait Rest extends Directives {
               val jsUser = user.toJson
               JsObject(Map("resultCode" -> resultCodes.success) ++ jsUser.fields)
             })
-            case _ => {
+            case None => {
               JsObject("resultCode" -> resultCodes.idNotFound)
             }
           }
         ).toString() )
       } ) } ~
-      post { ctx => ( {
+      put { ctx => ({
         User.fromDb(id) match {
           case Some(_) => ctx.complete(JsObject("result" -> resultCodes.duplicateId).toString())
           case None => ( {
             val user = new User(id)
             User.toDb(user)
             ctx.complete(JsObject("result" -> resultCodes.success).toString())
+          })
+        }
+      })} ~
+      post { ctx => ( {
+        User.fromDb(id) match {
+          case Some(_) => ctx.complete(JsObject("result" -> resultCodes.success).toString())
+          case None => ( {
+            ctx.complete(JsObject("result" -> resultCodes.idNotFound).toString())
           })
         }
       } ) } ~
