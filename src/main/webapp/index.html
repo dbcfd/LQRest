@@ -10,11 +10,25 @@
 <hr/>
 <a href="#"><div id="addUser">Add User</div></a>
 <a href="#"><div id="getUser">Get User</div></a>
+<a href="#"><div id="loginToFoursquare">Login to Foursquare</div></a>
 
 <script type="text/javascript">
     $(document).ready(function(){
+        $('#loginToFoursquare').click(function(event) {
+            alert("attempting to get response for foursquare");
+            $.ajax({
+                url : "/foursquare/oauth",
+                dataType : "json",
+                type : "GET",
+                success : function(result) {
+                    alert("got response for foursquare params");
+                    var fqUri = "https://foursquare.com/oauth2/authenticate?client_id=" + result.clientId
+                        + "&response_type=token&redirect_uri=" + result.fqRedirectUri;
+                    $('#output').html("attempting to redirect to " + fqUri);
+                }
+            });
+        } );
         $('#addUser').click(function(event) {
-            alert("sending ajax post");
             $.ajax({
                 url : "/api/users/testid",
                 dataType : "json",
@@ -26,7 +40,6 @@
             });
         } );
         $('#getUser').click(function(event) {
-            alert("sending ajax get");
             $.ajax({
                 url : "/api/users/testid",
                 dataType : "json",

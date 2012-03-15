@@ -19,6 +19,7 @@ object Build extends sbt.Build {
       libraryDependencies ++= Seq(
         Compile.akkaActor,
         Compile.sprayServer,
+        Compile.sprayCan,
         Compile.jodaTime,
         Compile.jodaConvert,
         Compile.casbah,
@@ -41,7 +42,8 @@ object Dependencies {
 
   object V {
     val akka    = "1.3.1"
-    val spray   = "0.9.0"
+    val sprayServer   = "0.9.0"
+    val sprayCan = "0.9.3"
     val specs2  = "1.7.1"
     val jetty   = "8.1.0.v20120127"
     val slf4j   = "1.6.4"
@@ -54,7 +56,8 @@ object Dependencies {
 
   object Compile {
     val akkaActor   = "se.scalablesolutions.akka" %  "akka-actor"      % V.akka        % "compile"
-    val sprayServer = "cc.spray"                  %  "spray-server"    % V.spray       % "compile"
+    val sprayServer = "cc.spray"                  %  "spray-server"    % V.sprayServer % "compile"
+    val sprayCan    = "cc.spray"                  %  "spray-can"       % V.sprayCan    % "compile"
     val jodaTime    = "joda-time"                 %  "joda-time"       % V.jodaTime    % "compile"
     val jodaConvert = "org.joda"                  %  "joda-convert"    % V.jodaConvert % "compile"
     val casbah      = "com.mongodb.casbah"        %  "casbah_2.9.1"    % V.casbah      % "compile"

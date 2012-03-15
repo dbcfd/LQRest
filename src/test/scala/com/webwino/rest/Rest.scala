@@ -18,11 +18,20 @@ class RestServiceSpec extends Specification with SprayTest with Rest with SprayJ
     def apply[S <: Either[DeserializationError,String]](s: Expectable[S]) = { s.value match {
       case e:Right[_,_] => {
         val str:String = e.right.get
-        val resultParser(code) = str
-        result(resultCode.toString().equals(code),
-          "Response " + str + " with resultCode " + code + " is " + resultCode,
-          "Response " + str + " with resultCode " + code + " is not " + resultCode,
-          s)
+        str match {
+          case resultParser(code) => {
+            result(resultCode.toString().equals(code),
+              "Response " + str + " with resultCode " + code + " is " + resultCode,
+              "Response " + str + " with resultCode " + code + " is not " + resultCode,
+              s)
+          }
+          case _ => {
+            result(false,
+              "Should never be displayed",
+              "Response code not found: " + s.value.toString(),
+              s)
+          }
+        }
       }
     }}
   }
@@ -31,6 +40,11 @@ class RestServiceSpec extends Specification with SprayTest with Rest with SprayJ
       testService(HttpRequest(GET, "/test")) {
         restService
       }.response.content.as[String] mustEqual Right("Say hello to Spray!")
+    }
+    "return a success response for GET requests to the foursquare/oauth path" in {
+      testService(HttpRequest(GET, "/foursquare/oauth")) {
+        restService
+      }.response.content.as[String] must new ResultMatcher(resultCodes.success)
     }
     "return a success response for GET requests to the api/users/testid path" in {
       testService(HttpRequest(GET, "/api/users/testid")) {
