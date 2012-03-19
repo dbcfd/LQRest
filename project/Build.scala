@@ -9,10 +9,10 @@ object Build extends sbt.Build {
 
   lazy val myProject = Project("LQRest", file("."))
     .settings(WebPlugin.webSettings: _*)
-    .settings(port in config("container") := 8080)
+    .settings(port in config("container") := 8081)
     .settings(
-      organization  := "com.example",
-      version       := "0.9.0",
+      organization  := "com.webwino",
+      version       := "0.1.0",
       scalaVersion  := "2.9.1",
       scalacOptions := Seq("-deprecation", "-encoding", "utf8"),
       resolvers     ++= Dependencies.resolutionRepos,

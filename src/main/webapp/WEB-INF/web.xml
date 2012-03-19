@@ -21,6 +21,11 @@
         <servlet-name>SprayConnectorServlet</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SprayConnectorServlet</servlet-name>
+        <url-pattern>/foursquare/*</url-pattern>
+    </servlet-mapping>
     
     <servlet-mapping>
         <servlet-name>SprayConnectorServlet</servlet-name>

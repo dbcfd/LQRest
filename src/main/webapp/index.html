@@ -21,10 +21,9 @@
                 dataType : "json",
                 type : "GET",
                 success : function(result) {
-                    alert("got response for foursquare params");
                     var fqUri = "https://foursquare.com/oauth2/authenticate?client_id=" + result.clientId
-                        + "&response_type=token&redirect_uri=" + result.fqRedirectUri;
-                    $('#output').html("attempting to redirect to " + fqUri);
+                        + "&response_type=token&redirect_uri=" + result.callbackUri;
+                    window.location.replace(fqUri);
                 }
             });
         } );
@@ -34,7 +33,6 @@
                 dataType : "json",
                 type : "POST",
                 success : function(result) {
-                    alert("data=" + JSON.stringify(result));
                     $('#output').html("Sucessfully added user");
                 }
             });
@@ -45,7 +43,6 @@
                 dataType : "json",
                 type : "GET",
                 success : function(result) {
-                    alert("data=" + JSON.stringify(result));
                     $('#output').html("get user");
                 }
             });
